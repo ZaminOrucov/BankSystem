@@ -8,7 +8,7 @@
 import SwiftUI
 import SwiftData
 
-@main
+
 struct BanksystemApp: App {
     var sharedModelContainer: ModelContainer = {
         let schema = Schema([
