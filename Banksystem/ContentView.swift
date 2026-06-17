@@ -25,10 +25,9 @@ struct CardTransaction: Identifiable, Equatable {
     let id = UUID()
     let date: Date
     let title: String
-    let amount: Double // positive = income (mədaxil), negative = expense (məxaric)
+    let amount: Double 
 }
 
-// MARK: - App entry
 @main
 struct BankApp: App {
     var body: some Scene {
@@ -37,8 +36,6 @@ struct BankApp: App {
         }
     }
 }
-
-// MARK: - ContentView (TabView)
 struct ContentView: View {
     @State private var selectedTab = 0
     @State private var cards: [BankCard] = [
@@ -107,12 +104,9 @@ struct ContentView: View {
             }
         }
     }
-
-    // MARK: - Home tab view
     var homeTab: some View {
         NavigationView {
             VStack(spacing: 16) {
-                // Profile row
                 HStack(spacing: 12) {
                     Image(systemName: "person.crop.circle.fill")
                         .resizable()
@@ -129,8 +123,6 @@ struct ContentView: View {
                     Spacer()
                 }
                 .padding(.horizontal)
-
-                // Horizontal card slider
                 GeometryReader { geo in
                     ScrollView(.horizontal, showsIndicators: false) {
                         HStack(spacing: 16) {
@@ -142,7 +134,6 @@ struct ContentView: View {
                                     }
                             }
 
-                            // Add card tile
                             AddCardTile {
                                 addCard()
                             }
@@ -152,8 +143,6 @@ struct ContentView: View {
                     }
                 }
                 .frame(height: 220)
-
-                // Quick last transactions preview (global)
                 VStack(alignment: .leading, spacing: 8) {
                     HStack {
                         Text("Son əməliyyatlar")
