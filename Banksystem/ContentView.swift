@@ -10,11 +10,8 @@ struct BankCard: Identifiable {
     var vatPercent: Double
     var color1: Color
     var color2: Color
-    // per-card transactions (mədaxil / məxaric)
     var transactions: [CardTransaction] = []
 }
-
-// implement Equatable manually (compare by id) to avoid Color non-Equatable problem
 extension BankCard: Equatable {
     static func == (lhs: BankCard, rhs: BankCard) -> Bool {
         return lhs.id == rhs.id
@@ -153,8 +150,6 @@ struct ContentView: View {
                         }
                         .font(.caption)
                     }
-
-                    // Show up to 3 most recent across all cards
                     let recent = cards.flatMap { $0.transactions.map { $0 } }
                         .sorted { $0.date > $1.date }
                     ForEach(Array(recent.prefix(3))) { tx in
@@ -173,8 +168,6 @@ struct ContentView: View {
             .navigationBarHidden(true)
         }
     }
-
-    // MARK: - History tab (shows full history grouped by card)
     var historyTab: some View {
         NavigationView {
             List {
@@ -198,8 +191,6 @@ struct ContentView: View {
             .navigationTitle("Tarixçə")
         }
     }
-
-    // MARK: - Discover tab
     var discoverTab: some View {
         NavigationView {
             VStack {
@@ -213,8 +204,6 @@ struct ContentView: View {
             }
         }
     }
-
-    // MARK: - More tab
     var moreTab: some View {
         NavigationView {
             VStack {
@@ -228,8 +217,6 @@ struct ContentView: View {
             }
         }
     }
-
-    // MARK: - Helpers
     private func addCard() {
         let new = BankCard(
             name: "Yeni Kart",
@@ -244,8 +231,6 @@ struct ContentView: View {
         withAnimation { cards.append(new) }
     }
 }
-
-// MARK: - Card view (visual)
 struct CardView: View {
     let card: BankCard
 
@@ -323,8 +308,6 @@ struct AddCardTile: View {
         }
     }
 }
-
-// MARK: - Card detail view (bound to the card in array)
 struct CardDetailView: View {
     @Binding var card: BankCard
     @Environment(\.dismiss) var dismiss
@@ -385,8 +368,6 @@ struct CardDetailView: View {
                 .padding(.top, 6)
 
                 Divider().padding(.vertical, 8)
-
-                // Mədaxil / Məxaric tarixçəsi (per-card)
                 VStack(alignment: .leading, spacing: 8) {
                     Text("Tarixçə")
                         .font(.headline)
@@ -419,7 +400,6 @@ struct CardDetailView: View {
             .padding(.bottom)
             .navigationBarItems(trailing: Button("Bağla") { dismiss() })
             .navigationBarTitleDisplayMode(.inline)
-            // MARK: - Sheets for actions
             .sheet(isPresented: $showPay) {
                 SimpleAmountSheet(title: "Ödə", primaryColor: .blue) { value in
                     addTransaction(title: "Ödə", amount: -value)
@@ -439,14 +419,11 @@ struct CardDetailView: View {
     }
 
     private func addTransaction(title: String, amount: Double) {
-        // update balance and push transaction
         card.balance += amount
         let tx = CardTransaction(date: Date(), title: title, amount: amount)
         card.transactions.insert(tx, at: 0)
     }
 }
-
-// MARK: - Simple sheet for entering amount (used by Ödə / Köçür)
 struct SimpleAmountSheet: View {
     let title: String
     let primaryColor: Color
@@ -482,8 +459,6 @@ struct SimpleAmountSheet: View {
         }
     }
 }
-
-// MARK: - Mock QR screen
 struct QRMockView: View {
     @Environment(\.dismiss) var dismiss
     var body: some View {
@@ -503,8 +478,6 @@ struct QRMockView: View {
         }
     }
 }
-
-// MARK: - TransactionRow reusable
 struct TransactionRow: View {
     let title: String
     let subtitle: String
@@ -525,7 +498,6 @@ struct TransactionRow: View {
     }
 }
 
-// MARK: - Helpers
 fileprivate extension Double {
     func rounded(toPlaces places:Int) -> Double {
         let mult = pow(10.0, Double(places))
@@ -533,7 +505,6 @@ fileprivate extension Double {
     }
 }
 
-// MARK: - Preview
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
         ContentView()
